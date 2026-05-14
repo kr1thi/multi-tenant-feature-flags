@@ -25,7 +25,7 @@ The system relies on two primary tables:
 2. **Feature_Flags:** Stores flag keys, enabled status, and a reference to the `org_id`.
 ## 📸 Screenshots
 ### Admin Dashboard
-![Dashboard Screenshot](file:///C:/Users/MY-PC/Desktop/Project/backend/org-admin-ui/index1_org.html)
+![Dashboard Screenshot]([file:///C:/Users/MY-PC/Desktop/Project/backend/org-admin-ui/index1_org.html](https://github.com/kr1thi/multi-tenant-feature-flags/blob/main/org_admin.png))
 
 ### API Response (Flag Status)
 ![API Response](UNGA_IMAGE_LINK_INGA_PODUNGA)
