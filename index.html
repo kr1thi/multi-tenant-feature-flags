@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Super Admin - Create Org</title>
+</head>
+<body>
+    <h2>Super Admin Login</h2>
+    <input type="text" id="user" placeholder="Username">
+    <input type="password" id="pass" placeholder="Password">
+    <button onclick="login()">Login</button>
+
+    <hr>
+
+    <h2>Create Organization</h2>
+    <input type="text" id="orgName" placeholder="Organization Name">
+    <button onclick="createOrg()">Create</button>
+
+    <script>
+        let token = "";
+
+        async function login() {
+            const res = await fetch('http://localhost:3000/superadmin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: document.getElementById('user').value, 
+                    password: document.getElementById('pass').value 
+                })
+            });
+            const data = await res.json();
+            if(data.token) {
+                token = data.token;
+                alert("Login Success!");
+            } else {
+                alert("Login Failed");
+            }
+        }
+
+        async function createOrg() {
+            const res = await fetch('http://localhost:3000/org', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name: document.getElementById('orgName').value })
+            });
+            const data = await res.json();
+            alert("Org Created: " + JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
