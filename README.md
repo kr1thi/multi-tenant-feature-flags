@@ -23,6 +23,12 @@ This project is a **Multi-tenant Feature Flag System** built to provide data iso
 The system relies on two primary tables:
 1. **Organizations:** Stores unique `org_id` and company details.
 2. **Feature_Flags:** Stores flag keys, enabled status, and a reference to the `org_id`.
+## 📸 Screenshots
+### Admin Dashboard
+![Dashboard Screenshot](file:///C:/Users/MY-PC/Desktop/Project/backend/org-admin-ui/index1_org.html)
+
+### API Response (Flag Status)
+![API Response](UNGA_IMAGE_LINK_INGA_PODUNGA)
 
 ## ⚙️ Future Improvements
 - [ ] **Caching:** Implementing Redis for faster flag evaluation.
