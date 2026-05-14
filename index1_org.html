@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Org Admin - Manage Features</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .btn-delete { color: white; background-color: red; border: none; padding: 5px 10px; cursor: pointer; }
+        .btn-toggle { color: white; background-color: blue; border: none; padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>1. Org Admin Signup</h2>
+    <input type="text" id="regUser" placeholder="Username">
+    <input type="password" id="regPass" placeholder="Password">
+    <input type="number" id="regOrgId" placeholder="Organization ID">
+    <button onclick="signup()">Signup</button>
+
+    <hr>
+
+    <h2>2. Org Admin Login</h2>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+
+    <hr>
+
+    <h2>3. Create Feature Flag</h2>
+    <input type="text" id="flagKey" placeholder="Flag Key (e.g. dark_mode)">
+    <label><input type="checkbox" id="flagEnabled"> Enabled</label>
+    <button onclick="createFlag()">Create Flag</button>
+
+    <hr>
+
+    <h2>4. Your Feature Flags</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Flag Key</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="flagTableBody">
+            <!-- Flags will appear here -->
+        </tbody>
+    </table>
+
+    <script>
+        let adminToken = "";
+
+        async function signup() {
+            const res = await fetch('http://localhost:3000/admin/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: document.getElementById('regUser').value, 
+                    password: document.getElementById('regPass').value,
+                    orgId: document.getElementById('regOrgId').value
+                })
+            });
+            const data = await res.json();
+            alert(data.message || "Signup failed");
+        }
+
+        async function login() {
+            const res = await fetch('http://localhost:3000/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: document.getElementById('loginUser').value, 
+                    password: document.getElementById('loginPass').value 
+                })
+            });
+            const data = await res.json();
+            if(data.token) {
+                adminToken = data.token;
+                alert("Org Admin Login Success!");
+            } else {
+                alert("Login Failed");
+            }
+        }
+
+        async function createFlag() {
+            const key = document.getElementById('flagKey').value;
+            const enabled = document.getElementById('flagEnabled').checked;
+
+            const res = await fetch('http://localhost:3000/feature', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}`
+                },
+                body: JSON.stringify({ key, enabled })
+            });
+            const data = await res.json();
+            alert("Flag Created!");
+            addFlagToTable(data.flag_key, data.enabled); // Manual-ah table-la add pannuvom
+        }
+
+        // Table-la data-va display panna indha function
+        function addFlagToTable(key, enabled) {
+            const tableBody = document.getElementById('flagTableBody');
+            const row = document.createElement('tr');
+            row.id = `row-${key}`;
+            
+            row.innerHTML = `
+                <td>${key}</td>
+                <td id="status-${key}">${enabled ? '✅ Enabled' : '❌ Disabled'}</td>
+                <td>
+                    <button class="btn-toggle" onclick="toggleFlag('${key}', ${enabled})">Toggle Status</button>
+                    <button class="btn-delete" onclick="deleteFlag('${key}')">Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        // UPDATE (Toggle) FUNCTION
+        async function toggleFlag(key, currentStatus) {
+            const newStatus = !currentStatus;
+            const res = await fetch('http://localhost:3000/feature/toggle', {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${adminToken}`
+                },
+                body: JSON.stringify({ key, enabled: newStatus })
+            });
+
+            if (res.ok) {
+                const statusCell = document.getElementById(`status-${key}`);
+                statusCell.innerHTML = newStatus ? '✅ Enabled' : '❌ Disabled';
+                alert("Status Updated!");
+            }
+        }
+
+        // DELETE FUNCTION
+        async function deleteFlag(key) {
+            if (!confirm("Are you sure you want to delete this flag?")) return;
+
+            const res = await fetch(`http://localhost:3000/feature/${key}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            });
+
+            if (res.ok) {
+                document.getElementById(`row-${key}`).remove();
+                alert("Flag Deleted!");
+            }
+        }
+    </script>
+</body>
+</html>

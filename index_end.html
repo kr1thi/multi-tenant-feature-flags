@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>End User - Check Feature</title>
+</head>
+<body>
+    <h2>Check Feature Status</h2>
+    <input type="number" id="orgId" placeholder="Enter Organization ID">
+    <input type="text" id="flagKey" placeholder="Enter Feature Key (e.g. dark_mode)">
+    <button onclick="checkFeature()">Check Status</button>
+
+    <h3 id="result"></h3>
+
+    <script>
+        async function checkFeature() {
+            const orgId = document.getElementById('orgId').value;
+            const key = document.getElementById('flagKey').value;
+            
+            // Backend-la ezhuthuna GET /check endpoint
+            const res = await fetch(`http://localhost:3000/check?orgId=${orgId}&key=${key}`);
+            const data = await res.json();
+            
+            const resultElement = document.getElementById('result');
+            if (data.enabled) {
+                resultElement.innerHTML = "Status: ✅ ENABLED";
+                resultElement.style.color = "green";
+            } else {
+                resultElement.innerHTML = "Status: ❌ DISABLED";
+                resultElement.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
