@@ -23,10 +23,19 @@ This project is a **Multi-tenant Feature Flag System** built to provide data iso
 The system relies on two primary tables:
 1. **Organizations:** Stores unique `org_id` and company details.
 2. **Feature_Flags:** Stores flag keys, enabled status, and a reference to the `org_id`.
-## 📸 Screenshots
-### Admin Dashboard
 ## 📸 Project Preview
+
+### 1. Super Admin Dashboard
+Manage and create different organizations in the system.
+![Super Admin Dashboard](https://raw.githubusercontent.com/kr1thi/multi-tenant-feature-flags/main/super_admin.png)
+
+### 2. Org Admin Dashboard
+Manage and toggle feature flags for a specific organization.
 ![Org Admin Dashboard](https://raw.githubusercontent.com/kr1thi/multi-tenant-feature-flags/main/org_admin.png)
+
+### 3. End User View (API Output)
+The final API response that the client application consumes to enable/disable features.
+![End User View](https://raw.githubusercontent.com/kr1thi/multi-tenant-feature-flags/main/end_admin.png)
 
 ## ⚙️ Future Improvements
 - [ ] **Caching:** Implementing Redis for faster flag evaluation.
