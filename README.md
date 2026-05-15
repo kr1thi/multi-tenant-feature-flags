@@ -38,6 +38,7 @@ The final API response that the client application consumes to enable/disable fe
 ![End User View](https://raw.githubusercontent.com/kr1thi/multi-tenant-feature-flags/main/end_admin.png)
 
 ## ⚙️ Future Improvements
+- [ ] **Soft delete:** This helps to avoid data loss and we can restore deleted data later.
 - [ ] **Caching:** Implementing Redis for faster flag evaluation.
 - [ ] **Audit Logs:** To track which admin changed which flag and when.
-- [ ] **Targeting:** Roll out features to specific user segments based on custom attributes.
+
